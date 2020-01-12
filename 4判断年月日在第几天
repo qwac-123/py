@@ -1,0 +1,38 @@
+'''
+【程序4】
+题目：输入某年某月某日，判断这一天是这一年的第几天？
+普通闰年:公历年份是4的倍数的，一般是闰年。（如2004年就是闰年）；
+世纪闰年:公历年份是整百数的，必须是400的倍数才是闰年（如1900年不是世纪闰年，2000年是世纪闰年）；
+
+'''
+monthday=[31,28,31,30,31,30,31,31,30,31,30,31]
+
+
+date=input("输入YYYY年MM月DD日，例19990306，输入exit退出...\n")
+
+
+while date!="exit":
+    
+    countday=0
+    #isleapyear=False
+    year=int(date[0:4])
+    month=int(date[4:6])
+    day=int(date[6:8])
+    print(year,month,day)
+    if year%100==0:
+        if year%4==0:
+            isleapyear=True
+    elif year%4==0:
+        isleapyear=True
+    else:
+        isleapyear=False
+    if isleapyear:
+        monthday[1]=29
+    else:
+        monthday[1]=28
+
+    for i in range(month-1):
+        countday+=monthday[i]
+    countday+=day
+    print("%s是%d年的第%d天"%(date,year,countday))
+    date=input("输入YYYY年MM月DD日，例19990306，输入exit退出...\n")
