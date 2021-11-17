@@ -1,0 +1,81 @@
+import re
+#path='F:/3_尧舜教育/2_业务部/17-大活动文件/20210529时尚夫人大赛'
+#path='F:/3_尧舜教育/1_证书/20210708'
+#filename=path+'/'+'zb.txt'
+path=''
+filename='zb.txt'
+'''
+
+使用unicodedata模块
+
+Python标准库的unicodedata模块提供了normalize方法将Unicode字符转换为正常字符，
+该方法可算是处理这类情况最好的方法了，它会让字符回归到我们期望看到的样子，
+同时不损害其它正常的空白字符，而且还能还原其它非空白字符
+
+import unicodedata
+s = 'T-shirt\xa0\xa0短袖圆领衫,\u3000体恤衫\xa0买一件\t吧'
+unicodedata.normalize('NFKC', s)
+# T-shirt  短袖圆领衫, 体恤衫 买一件 吧 
+
+
+
+
+
+f = open(filename,"r",encoding='utf-8')   #设置文件对象
+textstr = f.read()     #将txt文件的所有内容读入到字符串textstr中
+f.close()   #将文件关闭
+
+#misclist=['。', '，', '：', '；', '《', '》', '、', ',', '.', ';', ':']
+'''
+textstr=''
+#wasempty=False#上一行是否空
+#iscontinuousempty=False#是否连续空行
+count=1
+groupname=''
+
+with open(filename,encoding='utf-8') as f:  # 设置文件对象
+    for line in f:
+        #count+=1
+        line=re.sub('[0-9①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳⓪ ，。、；‘’【】:：“”,./\\\\]',' ',line)# 把数字符号替换空格
+        line=re.sub('[楊]','杨',line)# 替换错别字繁体字
+        line=re.sub('[吳]','吴',line)# 替换错别字繁体字
+        
+        #line=re.sub('[0-9一二三四五六七八九十第桌，。、；‘’【】：“”,./\\\\]',' ',line)# 把数字符号替换空格
+        line=line.strip()# 将该行首尾空格剔除
+        line=re.sub('\s+',' ',line)
+        # 将该行连续空格替换为一个空格,\s+是连续空白字符，去除\xa0等空白字符
+        line=re.sub('\s+','\t',line)
+        # 将该行连续空格替换为一个回车,\s+是连续空白字符，去除\xa0等空白字符
+
+
+        '''一行隔一行
+        if len(line)==0:
+            isempty=True
+            if wasempty==True:
+                iscontinuousempty=True
+            wasempty=True
+        else:
+            isempty=False
+            wasempty=False
+            iscontinuousempty=False
+            
+        if iscontinuousempty:
+            pass
+        else:
+            textstr+=line+'\n'  # 将字符串写入文件中'''
+
+        
+        
+        if len(line)==0:
+            continue
+        elif line[-1]=='团' or line[-1]=='队':
+            groupname=line
+            continue
+        else:
+            textstr+=groupname+'\t'+line+'\n'  # 将字符串写入文件中
+            count+=1
+
+            
+with open('format-namelist.txt', 'w',encoding='utf-8') as f:  # 设置文件对象
+    f.write(textstr)
+
